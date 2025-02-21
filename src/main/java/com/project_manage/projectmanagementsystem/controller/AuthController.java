@@ -5,6 +5,7 @@ import com.project_manage.projectmanagementsystem.model.User;
 import com.project_manage.projectmanagementsystem.repository.UserRepository;
 import com.project_manage.projectmanagementsystem.request.LoginRequest;
 import com.project_manage.projectmanagementsystem.response.AuthResponse;
+import com.project_manage.projectmanagementsystem.service.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,9 @@ public class AuthController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SubscriptionService subscriptionService;
+
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(@RequestBody User user) {
         if (userRepository.findByEmail(user.getEmail()) != null) {
@@ -42,7 +46,9 @@ public class AuthController {
         newUser.setFullName(user.getFullName());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
+
+        subscriptionService.createSubscription(savedUser);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         String jwt = JwtProvider.generateToken(authentication);
