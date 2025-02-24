@@ -2,9 +2,8 @@ package com.project_manage.projectmanagementsystem.controller;
 
 
 import com.project_manage.projectmanagementsystem.model.Comment;
-import com.project_manage.projectmanagementsystem.model.Message;
 import com.project_manage.projectmanagementsystem.model.User;
-import com.project_manage.projectmanagementsystem.repository.CreateCommentRequest;
+import com.project_manage.projectmanagementsystem.request.CreateCommentRequest;
 import com.project_manage.projectmanagementsystem.response.MessageResponse;
 import com.project_manage.projectmanagementsystem.service.CommentService;
 import com.project_manage.projectmanagementsystem.service.UserService;
@@ -29,16 +28,19 @@ public class CommentController {
     @PostMapping()
     public ResponseEntity<Comment>createComment(
             @RequestBody CreateCommentRequest req,
-            @RequestHeader("Authentication") String jwt) throws Exception{
+            @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserProfileByJwt(jwt);
-        Comment createdComment = commentService.createComment(req.getIssueId(),user.getId(),req.getContent());
+        Comment createdComment = commentService.createComment(
+                req.getIssueId(),
+                user.getId(),
+                req.getContent());
         return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<MessageResponse>deleteComment(
+    public ResponseEntity<MessageResponse> deleteComment(
             @PathVariable Long commentId,
-            @RequestHeader("Authentication") String jwt) throws Exception{
+            @RequestHeader("Authorization") String jwt) throws Exception{
 
 
         User user = userService.findUserProfileByJwt(jwt);
@@ -49,7 +51,7 @@ public class CommentController {
     }
 
     @GetMapping("/{issueId}")
-    public ResponseEntity<List<Comment>>deleteComment(
+    public ResponseEntity<List<Comment>> getCommentByIssueId(
             @PathVariable Long issueId){
         List<Comment>comments = commentService.findCommentByIssueId(issueId);
         return new ResponseEntity<>(comments,HttpStatus.OK);

@@ -19,6 +19,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class AppConfig {
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.sessionManagement(Management -> Management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -38,7 +39,7 @@ public class AppConfig {
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration cfg = new CorsConfiguration();
                 cfg.setAllowedOrigins(Arrays.asList(
-                        "http://localhost:3006/",
+                        "http://localhost:3000/",
                         "http://localhost:5173/",
                         "http://localhost:4200/"
                 ));

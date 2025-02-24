@@ -46,7 +46,7 @@ public class IssueServiceImpl implements IssueService{
         issue.setTitle(issueRequest.getTitle());
         issue.setDescription(issueRequest.getDescription());;
         issue.setStatus(issueRequest.getStatus());
-        issue.setProjectID(issue.getProjectID());
+        issue.setProjectID(issueRequest.getProjectID());
         issue.setPriority(issueRequest.getPriority());
         issue.setDueData(issueRequest.getDueData());
         issue.setProject(project);
@@ -57,8 +57,9 @@ public class IssueServiceImpl implements IssueService{
     @Override
     public void deleteIssue(Long issueId, Long userId) throws Exception {
 
-        getIssueById(userId);
+        getIssueById(issueId);
         issueRepository.deleteById(issueId);
+
     }
 
     @Override

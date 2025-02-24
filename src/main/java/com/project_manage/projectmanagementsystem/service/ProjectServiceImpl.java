@@ -8,11 +8,11 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Data
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
@@ -34,6 +34,9 @@ public class ProjectServiceImpl implements ProjectService {
         createdProject.setName(projects.getName());
         createdProject.setCategory(projects.getCategory());
         createdProject.setDescription(projects.getDescription());
+        if (createdProject.getTeam() == null) {
+            createdProject.setTeam(new ArrayList<>());
+        }
         createdProject.getTeam().add(user);
 
         Project savedProject = projectRepository.save(createdProject);

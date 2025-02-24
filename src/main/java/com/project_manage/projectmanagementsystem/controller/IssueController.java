@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/issue")
+@RequestMapping("/api/issues")
 public class IssueController {
 
     @Autowired

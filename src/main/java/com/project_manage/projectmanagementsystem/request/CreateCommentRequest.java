@@ -1,10 +1,11 @@
-package com.project_manage.projectmanagementsystem.repository;
+package com.project_manage.projectmanagementsystem.request;
 
 
 import lombok.Data;
 
 @Data
 public class CreateCommentRequest {
+
 
     private Long issueId;
 

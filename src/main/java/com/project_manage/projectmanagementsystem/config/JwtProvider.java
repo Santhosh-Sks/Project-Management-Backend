@@ -13,35 +13,29 @@ import javax.crypto.SecretKey;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.project_manage.projectmanagementsystem.config.JwtConstant.SECRETE_KEY;
+
 public class JwtProvider {
 
-    private static final String SECRET_KEY = "your-very-secure-secret-key-should-be-long"; // Use env variables or properties
-    private static final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-    private static final long EXPIRATION_TIME = 864000000; // 10 days
+
+    static SecretKey key = Keys.hmacShaKeyFor(SECRETE_KEY.getBytes());
 
     public static String generateToken(Authentication auth) {
-        String email = auth.getName();
-        List<String> authorities = auth.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+        String jwt =Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(new Date().getTime()+86400000)).claim("email",auth.getName()).signWith(key).compact();
 
-        return Jwts.builder()
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .claim("email", email)
-                .claim("roles", authorities)
-                .signWith(key)
-                .compact();
+        return jwt;
     }
 
     public static String getEmailFromToken(String jwt) {
+
+        jwt= jwt.substring(7);
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
 
-        return claims.get("email", String.class);
+        return String.valueOf(claims.get("email"));
     }
 
     public static List<GrantedAuthority> getRolesFromToken(String jwt) {
