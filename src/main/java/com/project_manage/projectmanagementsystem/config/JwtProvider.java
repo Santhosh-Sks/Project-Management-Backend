@@ -7,18 +7,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.crypto.SecretKey;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.project_manage.projectmanagementsystem.config.JwtConstant.SECRETE_KEY;
+import static com.project_manage.projectmanagementsystem.config.JwtConstant.SECRET_KEY;
 
 public class JwtProvider {
 
 
-    static SecretKey key = Keys.hmacShaKeyFor(SECRETE_KEY.getBytes());
+    static SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
     public static String generateToken(Authentication auth) {
         String jwt =Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(new Date().getTime()+86400000)).claim("email",auth.getName()).signWith(key).compact();
